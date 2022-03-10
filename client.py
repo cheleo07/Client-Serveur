@@ -20,7 +20,7 @@ if __name__ == '__main__':
     with socket(AF_INET, SOCK_STREAM) as sock:
         sock.connect((SERVER, PORT))
         num = read_json(sock.recv(4096))
-        print(f"You're player {num}")
+        print(f"Vous etes le joueur {num}")
         isReady = False
         gameEnded = False
         while (not isReady):
@@ -30,7 +30,7 @@ if __name__ == '__main__':
                     isReady = True
                     sock.send(create_json("test", isReady))
         while not gameEnded:
-            first_letter = sock.recv(4096).decode('utf-8')
+            first_letter = sock.recv(4096).decode('utf-8') #recois random letter server
             wordIsCorrect = False
             while (not wordIsCorrect):
                 content = input(f"Veuillez rentrer un mot commençant par {first_letter} \n").lower()
