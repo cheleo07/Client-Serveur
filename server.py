@@ -64,41 +64,6 @@ class Player(Thread):
                         #Si 2 mot qui n'existe pas
                         self._sock.send(pack('!i', 2))
                     self._sock.send(pack('!i', self._nbletters))
-#return random word
-def word():
-    f = open('mot.txt', 'r', encoding='utf8')
-    contenu = f.readlines()
-    return unidecode(choice(contenu)).upper().replace('\n', '')
-
-#replace by underscore
-def underscore(mot, L=[]):
-    r = ''
-    for i in mot:
-        if i in L:
-            r += i + ' '
-        else:
-            r += '_ '
-
-    return r[:-1]
-
-#input letter
-def saisie():
-    lettre = input('Entrez une lettre : ')
-    if len(lettre) > 1 or ord(lettre) < 65 or ord(lettre) > 122:
-        return saisie()
-    else:
-        return lettre.upper()
-
-#main
-lettres_deja_proposees = []
-mot_a_deviner = word()
-affichage = underscore(mot_a_deviner)
-print('Mot à deviner : ', affichage)
-nb_erreurs = 0
-
-
-
-
 
 def load_list_of_words():
     a_file = open("mot.txt", "r", encoding="utf8")

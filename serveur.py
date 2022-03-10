@@ -46,17 +46,19 @@ class Player(Thread):
         if all_players_ready():
             starter_time = time.time()  #########
             while True:
-                mot = mot_a_deviner  # random letter choose
-                self._sock.send(mot.encode())  # envoi lettre client
-                wordIsCorrect = False
-                while (not wordIsCorrect):
-                    word = self._sock.recv(4096).decode()  # recu mot client
-                    if not (word[0] == first_letter):  # si première lettre mot client == random letter
+                mot = mot_a_deviner  # random mot
+                self._sock.send(mot.encode())  # envoi mot au client
+                letterIsCorrect = False
+                while (not letterIsCorrect):
+                    letter = self._sock.recv(4096).decode()  # recu lettre client
+                    if letter not in lettres_deja_proposees:
+                        lettres_deja_proposees += [letter]
+                    if not (letter[0] == mot):  # si première lettre mot client == random letter
                         # Si 1, mauvaise premiere lettre
                         self._sock.send(pack('!i', 1))  # Envoie code associé au mot
-                    elif word in list_of_words:
+                    elif letter in list_of_words:
                         # Si 0, mot conforme
-                        self._nbletters += len(word)
+                        self._nbletters += len(letter)
                         if self._nbletters > NB_LETTERS_WIN:
                             end_time = time.time()
                             self._sock.send(pack('!i', 3))
