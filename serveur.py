@@ -16,6 +16,16 @@ players = []
 list_of_words = []
 first_letter = ""
 
+def word():
+    f = open('mot.txt', 'r', encoding='utf8')
+    contenu = f.readlines()
+    return unidecode(choice(contenu)).upper().replace('\n', '')
+
+lettres_deja_proposees = []
+mot_a_deviner = word()
+#affichage = underscore(mot_a_deviner)
+nb_erreurs = 0
+
 
 class Player(Thread):
     def __init__(self, num, sock):
@@ -28,11 +38,6 @@ class Player(Thread):
     def is_ready(self):
         return self._ready is not None
 
-    def word(self):
-        f = open('mot.txt', 'r', encoding='utf8')
-        contenu = f.readlines()
-        return unidecode(choice(contenu)).upper().replace('\n', '')
-
     def run(self):
         global ready_event
         self._sock.send(create_json("idjoueur", self._id))
@@ -41,7 +46,7 @@ class Player(Thread):
         if all_players_ready():
             starter_time = time.time()  #########
             while True:
-                mot = word()  # random letter choose
+                mot = mot_a_deviner  # random letter choose
                 self._sock.send(mot.encode())  # envoi lettre client
                 wordIsCorrect = False
                 while (not wordIsCorrect):
@@ -67,7 +72,6 @@ class Player(Thread):
                         # Si 2 mot qui n'existe pas
                         self._sock.send(pack('!i', 2))
                     self._sock.send(pack('!i', self._nbletters))
-
 
 def load_list_of_words():
     a_file = open("mot.txt", "r", encoding="utf8")
